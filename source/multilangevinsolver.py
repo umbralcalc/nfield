@@ -1,10 +1,4 @@
 import numpy as np
-import matplotlib as mpl
-mpl.use('Agg')
-import matplotlib.pyplot as plt
-from matplotlib import rc
-rc('text',usetex=True)
-import pylab as pl
 
 class multilangevinsolver:
 # Initialize the code
@@ -19,7 +13,6 @@ class multilangevinsolver:
         # Setup the system with drift A(x,t) and diffusion B(x,t) functions  
         self.solver_choice = solver_choice
         # Choose which solver to use - set to Improved Euler Scheme automatically
-        self.plot_functions = []
 
     def Improved_Euler_Iterator(self,walker_nd,time):
     # Iterate the solver with a strong order 1 Improved Euler Scheme from https://arxiv.org/abs/1210.0933
@@ -35,13 +28,6 @@ class multilangevinsolver:
         
         return walker_nd + (0.5*(K1+K2)) 
         # Return next step from a group of realisations 
-
-
-    def add_plot_line(self,function):
-    # Add an analytic line to the plot being made
-        self.plot_functions.append(function)
-        # Store functions to plot in a list
-
 
     def data_evolving_moments(self,datafilename,number_of_realisations,number_of_dimensions,deltat,number_of_timesteps,x0_dist):
     # Output data on the 1st and 2nd moments of solutions associated to many realisations of the Langevin equation using the requested solver

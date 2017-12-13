@@ -1,7 +1,7 @@
 import sys
 path = '/home/robert/work/'
-sys.path.append(path + 'multilangevinsolver/source/')
-from multilangevinsolver import multilangevinsolver 
+sys.path.append(path + 'nfield/source/')
+from nfield import nfield 
 import numpy as np
 
 def drift_function(x,t):
@@ -23,5 +23,5 @@ def init_value(dimension):
         output = 0.0
     return output
 
-mls = multilangevinsolver(path + 'multilangevinsolver/',drift_function,diffusion_function) 
+mls = multilangevinsolver(path + 'nfield/',drift_function,diffusion_function) 
 mls.data_evolving_moments('data_variance_test.txt',100,2,0.01,100,init_value)
