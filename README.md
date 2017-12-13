@@ -1,2 +1,7 @@
 # nfield
-Code for generally computing IR correlators during inflation with n-field dimensions - makes use of the formalism of Stochastic Inflation and hence 'multilangevinsolver'
+A Stochastic Inflation numerical solver - Computes the IR correlation functions of fields during cosmic inflation in n-field dimensions.
+
+# author
+Robert J. Hardwick
+
+Working on the test field case first...
