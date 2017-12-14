@@ -11,8 +11,8 @@ mpl.rcParams['ytick.labelsize'] = 20
 import matplotlib.pyplot as plt
 import pylab as pl
 
-masssq1 = 1.0
-masssq2 = 0.8
+masssq1 = 3.0
+masssq2 = 1.1
 Hend = 1.0#10.0**(-6.0)
 number_of_realisations = 10000
 number_of_fields = 2
@@ -20,8 +20,8 @@ Nefolds = 100.0
 Number_of_Nsteps = 1000
 
 def first_derivs_potential(field_realisations,N):
-    firstderivsfN = field_realisations
-    firstderivsfN[:,0] = masssq1*(field_realisations[:,0])
+    firstderivsfN = np.zeros((number_of_realisations,number_of_fields))# Very important to initialise to zeros!!
+    firstderivsfN[:,0] = masssq1*field_realisations[:,0]
     firstderivsfN[:,1] = masssq2*(field_realisations[:,1])
     return firstderivsfN
 
