@@ -17,15 +17,15 @@ class multilangevinsolver:
     def Improved_Euler_Iterator(self,walker_nd,time):
     # Iterate the solver with a strong order 1 Improved Euler Scheme from https://arxiv.org/abs/1210.0933
 
-        random_number = np.random.normal(0.0, np.sqrt(self.deltat),size=(len(walker_nd),len(walker_nd[0])))
+        random_number = np.random.normal(0.0,1.0,size=(len(walker_nd),len(walker_nd[0])))
         # Generate a random number for the Weiner process
 
-        S_alternate = np.random.normal(0.0, np.sqrt(self.deltat),size=(len(walker_nd),len(walker_nd[0])))
+        S_alternate = np.random.normal(0.0,1.0,size=(len(walker_nd),len(walker_nd[0])))
         # Generate a random number for alternator in Ito process
 
         K1 = (self.A(walker_nd,time)*self.deltat) + (np.sqrt(self.deltat)*(random_number-(S_alternate/abs(S_alternate)))*self.B(walker_nd,time)) 
         K2 = (self.A(walker_nd+K1,time+self.deltat)*self.deltat) + (np.sqrt(self.deltat)*(random_number+(S_alternate/abs(S_alternate)))*self.B(walker_nd+K1,time+self.deltat)) 
-        
+
         return walker_nd + (0.5*(K1+K2)) 
         # Return next step from a group of realisations 
 
@@ -50,7 +50,7 @@ class multilangevinsolver:
             if self.solver_choice == 'IE': 
                 realisations_nd = self.Improved_Euler_Iterator(realisations_nd,time)
                 # Iterate the Improved Euler solver for the realisations array
-                data_file.write(str(float(i)*deltat) + "\t" + str(np.sum(realisations_nd,axis=0)/float(number_of_realisations)) + "\t" + str(np.sum(realisations_nd**2.0,axis=0)/float(number_of_realisations)) + "\n") # Continuously output to the data file
+                data_file.write(str(float(i)*deltat) + "\t" + "\t".join(map(str, np.sum(realisations_nd,axis=0)/float(number_of_realisations))) + "\t" + "\t".join(map(str, np.sum(realisations_nd**2,axis=0)/float(number_of_realisations))) + "\n") # Continuously output to the data file
     
         data_file.close()
         # Close the data file
