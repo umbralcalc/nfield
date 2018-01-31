@@ -79,7 +79,7 @@ class multilangevinsolver:
                 # Iterate the Improved Euler solver for the realisations array
 
                 if i == output_indices[j]:
-                    data_file = open(self.path + 'data/' + datafilename + '_N' + str(float(i)*deltat),'w')
+                    data_file = open(self.path + 'data/' + 'N' + str(float(i)*deltat) + '_' + datafilename,'w')
                     # Open a new data file
 
                     realisations_string_list = map(str, realisations_nd)
