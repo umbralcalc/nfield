@@ -1,5 +1,5 @@
 import sys
-path = '/home/robert/work/'
+path = ''
 sys.path.append(path + 'nfield/source/')
 from multilangevinsolver import multilangevinsolver 
 from Distribution import Distribution
@@ -45,11 +45,17 @@ class nfield:
     def zero_field_values(self,field_dimension):
         return 0.0 
 
-    def output_IR_variances(self,name_data_file,Nstepsize,Nefolds,stationary_start=False):
+    def output_IR_variances(self,name_data_file,Nstepsize,Nefolds_timesteps,stationary_start=False):
         if stationary_start == True:
-            self.MLS.data_evolving_moments(name_data_file,self.number_of_field_realisations,self.number_of_field_dimensions,Nstepsize,Nefolds,self.stationary_field_values)
+            self.MLS.data_evolving_moments(name_data_file,self.number_of_field_realisations,self.number_of_field_dimensions,Nstepsize,Nefolds_timesteps,self.stationary_field_values)
         else:
-            self.MLS.data_evolving_moments(name_data_file,self.number_of_field_realisations,self.number_of_field_dimensions,Nstepsize,Nefolds,self.zero_field_values)
+            self.MLS.data_evolving_moments(name_data_file,self.number_of_field_realisations,self.number_of_field_dimensions,Nstepsize,Nefolds_timesteps,self.zero_field_values)
+
+    def output_2D_PDF(self,name_data_file,Nstepsize,Nefolds_timesteps,number_of_outputs,stationary_start=False):
+        if stationary_start == True:
+            self.MLS.data_prob_densities_2D(name_data_file,self.number_of_field_realisations,number_of_outputs,Nstepsize,Nefolds_timesteps,self.stationary_field_values)
+        else:
+            self.MLS.data_prob_densities_2D(name_data_file,self.number_of_field_realisations,number_of_outputs,Nstepsize,Nefolds_timesteps,self.zero_field_values)
 
 
 
