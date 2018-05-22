@@ -55,23 +55,23 @@ class multilangevinsolver:
         data_file.close()
         # Close the data file
 
-    def data_prob_densities_2D(self,datafilename,number_of_realisations,number_of_outputs,deltat,number_of_timesteps,x0_dist):
-    # Output data for the probability density in 2 field dimensions computed using the requested solver
+    def data_realisations_ND(self,datafilename,number_of_realisations,output_values_t,number_of_dimensions,deltat,number_of_timesteps,x0_dist):
+    # Output multiple snapshots of realisations to compute the probability density in N dimensions computed using the requested solver
   
         self.deltat = deltat
         # Set spatial and temporal initial conditions as well as the timestep
 
-        realisations_nd = np.asarray([[x0_dist(D) for D in range(0,2)] for x_value in range(0,number_of_realisations)])
+        realisations_nd = np.asarray([[x0_dist(D) for D in range(0,number_of_dimensions)] for x_value in range(0,number_of_realisations)])
         # Initialise the realisations array        
 
-        output_indices = [int((float(number_of_timesteps)/float(number_of_outputs))*float(i)) for i in range(0,number_of_outputs)]
+        output_indices = [int(output_values_t[i]/float(deltat)) for i in range(0,len(output_values_t))]
         # Prepare a list of indices to mark the timescales of each plot
 
         j = 0 
         for i in range(0,number_of_timesteps):
         # Initialise loop over time
             
-            time = float(i)*deltat*np.ones((number_of_realisations,2))
+            time = float(i)*deltat*np.ones((number_of_realisations,number_of_dimensions))
             # Take a new step forward in time and set an appropriate dimension array of identical 'times'
 
             if self.solver_choice == 'IE': 
@@ -79,7 +79,7 @@ class multilangevinsolver:
                 # Iterate the Improved Euler solver for the realisations array
 
                 if i == output_indices[j]:
-                    data_file = open(self.path + 'data/' + 'N' + str(float(i)*deltat) + '_' + datafilename,'w')
+                    data_file = open(self.path + 'data/' + 'time' + str(j) + '_' + datafilename,'w')
                     # Open a new data file
 
                     realisations_string_list = map(str, realisations_nd)
@@ -93,6 +93,50 @@ class multilangevinsolver:
                     # Close the data file
 
                     if j < len(output_indices)-1: j += 1 
+                    # Iterate over j to move to the next plot output unless no more are required
+
+
+    def data_realisations_ND_gen_init_cond(self,datafilename,number_of_realisations,output_values_t,number_of_dimensions,deltat,number_of_timesteps,x0_dist):
+    # Output multiple snapshots of realisations to compute the probability density in N dimensions computed using the requested solver
+    # This function allows for the user to insert an array of initial samples directly through x0_dist
+  
+        self.deltat = deltat
+        # Set spatial and temporal initial conditions as well as the timestep
+
+        realisations_nd = x0_dist
+        # Initialise the realisations array        
+
+        output_indices = [int(output_values_t[i]/float(deltat)) for i in range(0,len(output_values_t))]
+        # Prepare a list of indices to mark the timescales of each plot
+
+        j = 0 
+        for i in range(0,number_of_timesteps):
+        # Initialise loop over time
+            
+            time = float(i)*deltat*np.ones((number_of_realisations,number_of_dimensions))
+            # Take a new step forward in time and set an appropriate dimension array of identical 'times'
+
+            if self.solver_choice == 'IE': 
+                realisations_nd = self.Improved_Euler_Iterator(realisations_nd,time)
+                # Iterate the Improved Euler solver for the realisations array
+
+                if i == output_indices[j]:
+                    data_file = open(self.path + 'data/' + 'time' + str(j) + '_' + datafilename,'w')
+                    # Open a new data file
+
+                    realisations_string_list = map(str, realisations_nd)
+                    realisations_string_list = [rsl.strip('[]') for rsl in realisations_string_list]
+                    # Remove tedious brackets from the output
+
+                    data_file.write("\n".join(realisations_string_list)) 
+                    # Continuously output to the data file
+
+                    data_file.close()
+                    # Close the data file
+
+                    if j <= len(output_indices)-1: 
+                        j += 1
+                        if j >= len(output_indices): j = 0 
                     # Iterate over j to move to the next plot output unless no more are required
 
    
