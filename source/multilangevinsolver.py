@@ -98,7 +98,7 @@ class multilangevinsolver:
 
     def data_realisations_ND_gen_init_cond(self,datafilename,number_of_realisations,output_values_t,number_of_dimensions,deltat,number_of_timesteps,x0_dist):
     # Output multiple snapshots of realisations to compute the probability density in N dimensions computed using the requested solver
-    # This function allows for the user to insert an array of initial samples directly through x0_dist
+    # This routine allows for the user to insert an array of initial samples directly through x0_dist
   
         self.deltat = deltat
         # Set spatial and temporal initial conditions as well as the timestep
@@ -138,5 +138,56 @@ class multilangevinsolver:
                         j += 1
                         if j >= len(output_indices): j = 0 
                     # Iterate over j to move to the next plot output unless no more are required
+
+
+    def PDF_at_condition_point_ND_gen_init_cond(self,datafilename,number_of_realisations,output_cond_list,spec_func,number_of_dimensions,deltat,number_of_timesteps,x0_dist):
+    # Output binned PDF of some specified function 'spec_func' of the samples at intervals given by a list of Boolean functions 'output_cond_list'
+    # As for the one above, this routine allows for the user to insert an array of initial samples directly through x0_dist
+
+        self.deltat = deltat
+        # Set spatial and temporal initial conditions as well as the timestep
+
+        realisations_nd = x0_dist
+        # Initialise the realisations array        
+
+        output_condition_index = 0
+        # Initialise index for the correct condition to satisfy
+
+        for i in range(0,number_of_timesteps):
+        # Initialise loop over time
+            
+            time = float(i)*deltat*np.ones((number_of_realisations,number_of_dimensions))
+            # Take a new step forward in time and set an appropriate dimension array of identical 'times'
+
+            if self.solver_choice == 'IE': 
+                realisations_nd = self.Improved_Euler_Iterator(realisations_nd,time)
+                # Iterate the Improved Euler solver for the realisations array
+
+                if output_condition_index == len(output_cond_list): break
+                # Halt any further unnecessary computation once all of the PDF's have been ouput
+
+                if output_cond_list[output_condition_index](realisations_nd) == True:
+                # If criterion for outputting is met then generate a binned PDF of the specified function of samples
+                    data_file = open(self.path + 'data/' + 'condition' + str(output_condition_index) + '_' + datafilename,'w')
+                    # Open a new data file
+
+                    function_data = spec_func(realisations_nd)
+                    # Compute the function for each realisation 
+
+                    pdf_values = np.asarray(np.histogram(function_data,bins='fd',density=True))
+                    # Compute the binned PDF using the Freedman-Diaconis rule: https://en.wikipedia.org/wiki/Freedman%E2%80%93Diaconis_rule 
+
+                    pdf_values_string_list = map(str, map(list, zip(*pdf_values)))
+                    pdf_values_string_list = [rsl.strip('[]') for rsl in pdf_values_string_list]
+                    # Remove tedious brackets from the output
+
+                    data_file.write("\n".join(pdf_values_string_list).replace(',','')) 
+                    # Continuously output to the data file while removing commas
+
+                    data_file.close()
+                    # Close the data file
+
+                    output_condition_index+=1
+                    # Iterate to the next condition to satisfy
 
    
