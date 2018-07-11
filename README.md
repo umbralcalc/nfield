@@ -1,9 +1,9 @@
-# nfield - a python class with tools to solve for the 1-loop resummation of the correlation functions of quantum fields during inflation.
-The numerical solver makes use of the Stochastic formalism (see e.g. https://arxiv.org/abs/1506.04732) and computes the IR correlation functions of fields during cosmic inflation in n-field dimensions.
+# nfield - a stochastic tool for QFT on inflationary backgrounds
+The numerical solver makes use of the stochastic formalism (see https://arxiv.org/abs/1803.03521) and computes the IR correlation functions of quantum fields during cosmic inflation in n-field dimensions. This is a necessary 1-loop resummation of the correlation functions to render them finite.
 
 # Current version
 
-The code currently only supports the implementation of n-numbers of coupled test fields (energetically sub-dominant), though there are plans in the immediate future to include inflationary fields as well. The current example script: nfield/scripts/test_nfield.py solves for 5 test fields simultaneously. 
+The code now supports the implementation of n-numbers of coupled test fields (energetically sub-dominant) as well as non-test fields. The current example script: nfield/scripts/test_nfield.py solves for 5 test fields simultaneously. 
 
 # Getting started
 

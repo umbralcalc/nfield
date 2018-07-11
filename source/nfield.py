@@ -1,17 +1,6 @@
-import sys
-path = '/home/robert/work/'
-sys.path.append(path + 'nfield_inflatons/source/')
+import numpy as np
 from multilangevinsolver import multilangevinsolver 
 from Distribution import Distribution
-
-import numpy as np
-import matplotlib as mpl
-mpl.use('Agg')
-import matplotlib.pyplot as plt
-from matplotlib import rc
-rc('text',usetex=True)
-import pylab as pl
-
 
 class nfield:
 # Initialize the code
@@ -34,9 +23,11 @@ class nfield:
 
     def classical_terms(self,field_realisations,N):
         return -self.first_derivs_potential(field_realisations,N)/(3.0*(self.Hubble_function(field_realisations,N)**2.0))
+        # Set the classical slow-roll inflation terms
 
     def quantum_terms(self,field_realisations,N):
         return (self.Hubble_function(field_realisations,N)/(2.0*np.pi))*np.ones((self.number_of_field_realisations,self.number_of_field_dimensions))
+        # Set the quantum noise terms
 
     def stationary_field_values(self,field_dimension):
     # Needs generalising to dimension number and potential type before full implementation
@@ -45,12 +36,15 @@ class nfield:
         return float(Distribution(pdf, transform=lambda i:i-256)(1)) 
 
     def zero_field_values(self,field_dimension):
+    # Option to begin at zero for all field values
         return 0.0 
 
     def initial_condition_function(self,field_dimension):
+    # Option to insert samples by hand as a set initial condition for the process
         return self.init_cond_list[field_dimension]
 
     def output_IR_variances(self,name_data_file,Nstepsize,Nefolds_timesteps,initial_condition=None):
+    # Option to output the first and second moments for all fields
         if initial_condition:
             self.init_cond_list = initial_condition
             self.MLS.data_evolving_moments(name_data_file,self.number_of_field_realisations,self.number_of_field_dimensions,Nstepsize,Nefolds_timesteps,self.initial_condition_function)
@@ -58,6 +52,7 @@ class nfield:
             self.MLS.data_evolving_moments(name_data_file,self.number_of_field_realisations,self.number_of_field_dimensions,Nstepsize,Nefolds_timesteps,self.zero_field_values)
 
     def output_ND_PDF_data(self,name_data_file,Nstepsize,Nefolds_timesteps,output_Ns,initial_condition=None):
+    # Option to output the direct samples of the process
         if initial_condition:
             self.init_cond_list = initial_condition
             self.MLS.data_realisations_ND(name_data_file,self.number_of_field_realisations,output_Ns,self.number_of_field_dimensions,Nstepsize,Nefolds_timesteps,self.initial_condition_function)
@@ -65,7 +60,12 @@ class nfield:
             self.MLS.data_realisations_ND(name_data_file,self.number_of_field_realisations,output_Ns,self.number_of_field_dimensions,Nstepsize,Nefolds_timesteps,self.zero_field_values)
 
     def output_ND_PDF_data_gen_init_cond(self,name_data_file,Nstepsize,Nefolds_timesteps,output_Ns,initial_condition_array):
+    # Use this for a generic initial condition set by hands
         self.MLS.data_realisations_ND_gen_init_cond(name_data_file,self.number_of_field_realisations,output_Ns,self.number_of_field_dimensions,Nstepsize,Nefolds_timesteps,initial_condition_array)
+
+    def PDF_at_condition_point_ND_gen_init_cond(self,name_data_file,Nstepsize,Nefolds_timesteps,output_cond_list,spec_func,initial_condition_array):
+    # Use this to output pdf samples at a point given by a specific condition with generic initial conditions
+        self.MLS.PDF_at_condition_point_ND_gen_init_cond(name_data_file,self.number_of_field_realisations,output_cond_list,spec_func,self.number_of_field_dimensions,Nstepsize,Nefolds_timesteps,initial_condition_array)
 
 
 

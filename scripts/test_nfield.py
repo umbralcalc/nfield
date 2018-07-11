@@ -5,7 +5,7 @@ from nfield import nfield
 import numpy as np
 import matplotlib as mpl
 mpl.use('Agg')
-mpl.rc('font',family='Computer Modern Roman')
+mpl.rc('font',family='CMU Serif')
 mpl.rcParams['xtick.labelsize'] = 20
 mpl.rcParams['ytick.labelsize'] = 20
 import matplotlib.pyplot as plt
