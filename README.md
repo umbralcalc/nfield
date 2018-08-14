@@ -1,5 +1,5 @@
 # nfield - a stochastic tool for QFT on inflationary backgrounds
-The numerical solver makes use of the stochastic formalism (see https://arxiv.org/abs/1803.03521) and computes the IR correlation functions of quantum fields during cosmic inflation in n-field dimensions. This is a necessary 1-loop resummation of the correlation functions to render them finite.
+The numerical solver makes use of the stochastic formalism (see [https://arxiv.org/abs/1803.03521]) and computes the IR correlation functions of quantum fields during cosmic inflation in n-field dimensions. This is a necessary 1-loop resummation of the correlation functions to render them finite.
 
 # Current version
 
