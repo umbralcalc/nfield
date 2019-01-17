@@ -79,18 +79,8 @@ class multilangevinsolver:
                 # Iterate the Improved Euler solver for the realisations array
 
                 if i == output_indices[j]:
-                    data_file = open(self.path + 'data/' + 'time' + str(j) + '_' + datafilename,'w')
-                    # Open a new data file
-
-                    realisations_string_list = map(str, realisations_nd)
-                    realisations_string_list = [rsl.strip('[]') for rsl in realisations_string_list]
-                    # Remove tedious brackets from the output
-
-                    data_file.write("\n".join(realisations_string_list)) 
-                    # Continuously output to the data file
-
-                    data_file.close()
-                    # Close the data file
+                    # Save realisations to file
+                    np.savetxt(self.path + 'data/' + 'time' + str(j) + '_' + datafilename,realisations_nd)
 
                     if j < len(output_indices)-1: j += 1 
                     # Iterate over j to move to the next plot output unless no more are required
@@ -121,19 +111,9 @@ class multilangevinsolver:
                 # Iterate the Improved Euler solver for the realisations array
 
                 if i == output_indices[j]:
-                    data_file = open(self.path + 'data/' + 'time' + str(j) + '_' + datafilename,'w')
-                    # Open a new data file
-
-                    realisations_string_list = map(str, realisations_nd)
-                    realisations_string_list = [rsl.strip('[]') for rsl in realisations_string_list]
-                    # Remove tedious brackets from the output
-
-                    data_file.write("\n".join(realisations_string_list)) 
-                    # Continuously output to the data file
-
-                    data_file.close()
-                    # Close the data file
-
+                    # Save realisations to file
+                    np.savetxt(self.path + 'data/' + 'time' + str(j) + '_' + datafilename,realisations_nd)
+                    
                     if j <= len(output_indices)-1: 
                         j += 1
                         if j >= len(output_indices): j = 0 
