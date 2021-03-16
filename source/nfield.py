@@ -1,16 +1,11 @@
 import numpy as np
-from multilangevinsolver import multilangevinsolver 
-from Distribution import Distribution
+from mlsolver import mlsolver
 
-class nfield:
-# Initialize the code
+class nfield(mlsolver):
 
-
-    def __init__(self,path_to_nfield_directory,first_derivs_potential,Hubble_function,number_of_field_realisations,number_of_field_dimensions,solver_choice='IE'):
-    # Initialise self...
+    def __init__(self,first_derivs_potential,Hubble_function,number_of_field_realisations,number_of_field_dimensions,solver='IE'):
        
-        self.classical_terms
-        self.quantum_terms
+        super().__init__(self.classical_terms(), self.quantum_terms(), solver=solver)
         self.zero_field_values
         self.stationary_field_values
         self.initial_condition_function
