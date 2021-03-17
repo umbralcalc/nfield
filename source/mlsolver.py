@@ -45,26 +45,37 @@ class mlensemble:
                 pass
 
             if self._store_covmat_isTrue == True:
-                self.dataDict["CovMatrix"] = {'t' : [], 'C' : []}
+                self.dataDict["CovMatrix"] = {'t' : [], 'x' : []}
 
                 def store_covmat(self):
                     self.dataDict["CovMatrix"]['t'].append(self.t)
-                    self.dataDict["CovMatrix"]['C'].append(np.cov(self.x))
+                    self.dataDict["CovMatrix"]['x'].append(np.cov(self.x))
 
             if self._snapshot_rate is not None:
-                self.dataDict["Snapshots"] = []
+                self.dataDict["Snapshots"] = {'t' : [], 'x' : []}
 
                 def store_snapshots(self):
                     if (self._tstep % self._snapshot_rate) == 0:
-                        self.dataDict["Snapshots"].append([self.t, self.x])
+                        self.dataDict["Snapshots"]['t'].append(self.t)
+                        self.dataDict["Snapshots"]['x'].append(self.x)
 
             if self._firstpass_booleans is not None:
-                self.dataDict["FirstPass"] = np.zeros_like(self.passed, dtype=bool)
+                xvals = np.empty_like(self.passed, dtype=float)
+                tvals = np.empty_like(self.passed, dtype=float)
+                xvals[:], tvals[:] = np.nan, np.nan 
+                self.dataDict["FirstPass"] = {'t' : tvals, 'x' : xvals}
 
                 def store_firstpass(self):
-                    self.dataDict["FirstPass"][
+                    self.dataDict["FirstPass"]['t'][
                         (~self.passed) & (self._firstpass_booleans)
                     ] = self.t
+                    self.dataDict["FirstPass"]['x'][
+                        (~self.passed) & (self._firstpass_booleans)
+                    ] = np.tensordot(
+                        np.ones(self.passed.shape[0]),
+                        self.x,
+                        axes=0
+                    )[(~self.passed) & (self._firstpass_booleans)]
                     self.passed[self._firstpass_booleans] = True
 
             def store_method(self):
@@ -103,7 +114,7 @@ class mlensemble:
         self.prevx = self.x.copy()
         self.x = self._Integrator(self.x, self.t)
         self._tstep += 1
-        self._firstpass_booleans = self.firstpass_func(self.prevx, self.x)
+        self._firstpass_booleans = self.firstpass_func(self.prevx, self.x, self.t)
         self.store(self)
 
 
@@ -175,3 +186,5 @@ class mlsolver:
             self.ens.Iterate()
             t += self.deltat
             self.ens.t = t
+
+
