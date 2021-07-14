@@ -94,7 +94,7 @@ class mlensemble:
         return self._passed
 
     @staticmethod
-    def firstpass_func(prevx: np.ndarray, x: np.ndarray):
+    def firstpass_func(prevx: np.ndarray, x: np.ndarray, t: float):
         return None
 
     def Init(self):
